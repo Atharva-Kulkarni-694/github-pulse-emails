@@ -1,0 +1,70 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+<section class="py-12 bg-white">
+    <div class="container mx-auto px-6">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-bold">Your GitHub Timeline</h2>
+            <div class="flex items-center space-x-4">
+                <div class="flex items-center space-x-2">
+                    <img id="userAvatar" src="{{ user.avatar_url }}" alt="User avatar" class="w-8 h-8 rounded-full">
+                    <span id="userName" class="font-medium">{{ user.login }}</span>
+                </div>
+                <a href="{{ url_for('logout') }}" class="text-gray-500 hover:text-gray-700">
+                    <i data-feather="log-out" class="w-5 h-5"></i>
+                </a>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="md:col-span-1 bg-gray-50 p-6 rounded-lg shadow">
+                <h3 class="font-semibold text-lg mb-4 flex items-center gap-2">
+                    <i data-feather="users" class="w-5 h-5"></i>
+                    Following ({{ following|length }})
+                </h3>
+                <div id="followingList" class="space-y-3 max-h-96 overflow-y-auto">
+                    {% for person in following %}
+                    <div class="flex items-center space-x-3 p-2 hover:bg-gray-100 rounded cursor-pointer">
+                        <img src="{{ person.avatar_url }}" alt="{{ person.login }}" class="w-8 h-8 rounded-full">
+                        <span class="font-medium text-sm">{{ person.login }}</span>
+                    </div>
+                    {% else %}
+                    <p class="text-gray-500 text-sm">You aren't following anyone yet.</p>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <div class="md:col-span-3">
+                <div class="bg-gray-50 p-6 rounded-lg shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-semibold text-lg flex items-center gap-2">
+                            <i data-feather="clock" class="w-5 h-5"></i>
+                            Recent Activity
+                        </h3>
+                        </div>
+
+                    <div id="activityTimeline" class="space-y-4">
+                        {% for event in timeline %}
+                        <div class="p-4 bg-white rounded-md shadow-sm border border-gray-100">
+                            <div class="flex space-x-3">
+                                <img src="{{ event.avatar }}" alt="{{ event.user }}" class="w-10 h-10 rounded-full">
+                                <div>
+                                    <p class="font-medium">
+                                        <span class="text-gray-900">{{ event.user }}</span> 
+                                        <span class="text-gray-600">{{ event.action }}</span> 
+                                        <a href="https://github.com/{{ event.repo }}" target="_blank" class="text-blue-600 hover:underline">{{ event.repo }}</a>
+                                    </p>
+                                    <p class="text-sm text-gray-500 mt-1">{{ event.time }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        {% else %}
+                        <p class="text-gray-500">No recent activity found from the people you follow.</p>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
